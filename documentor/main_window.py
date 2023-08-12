@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (QMainWindow, QMenuBar, QToolBar, QGraphicsView,
 from PySide6.QtGui import QBrush, QPen, QPixmap, QAction, QIcon
 
 from . import colors
+from .draw_area import DrawArea
 
 
 class MainWindow(QMainWindow):
@@ -111,9 +112,6 @@ class MainWindow(QMainWindow):
         """Create graphic view to show and edit objects."""
 
         self.scene = QGraphicsScene(self)
-        self.view = QGraphicsView(self.scene)
+        self.view = DrawArea(self.scene)
         self.setCentralWidget(self.view)
 
-        ellipse = self.scene.addEllipse(10, 10, 100, 200, colors.pens[colors.Color.GREEN])
-        pixmap = QPixmap("C:/Users/Thomas/Desktop/plan.png")
-        image = self.scene.addPixmap(pixmap)
