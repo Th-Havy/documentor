@@ -15,6 +15,7 @@ class Color(Enum):
     GREEN = Qt.GlobalColor.green
     BLUE = Qt.GlobalColor.blue
     YELLOW = Qt.GlobalColor.yellow
+    TRANSPARENT = Qt.GlobalColor.transparent
 
 # Create brushes
 BRUSHES = {c: QBrush(c.value) for c in Color}
@@ -28,6 +29,7 @@ _color_files = [
     "green.png",
     "blue.png",
     "yellow.png",
+    "transparent.png",
 ]
 
 def create_border_icons():

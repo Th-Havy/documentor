@@ -78,12 +78,7 @@ class MainWindow(QMainWindow):
         self.toolbar.addSeparator()
 
         self.create_border_menu()
-
-        background_path = current_dir / "images" / "background" / "transparent.png"
-        background_action = QAction(QIcon(str(background_path)), "Background", self)
-        background_action.setStatusTip("Change background color")
-        background_action.triggered.connect(lambda : print("background"))
-        self.toolbar.addAction(background_action)
+        self.create_background_menu()
 
 
     def create_border_menu(self):
@@ -107,3 +102,25 @@ class MainWindow(QMainWindow):
         self.border_button.triggered.connect(self.border_button.setDefaultAction)
 
         self.toolbar.addWidget(self.border_button)
+
+    def create_background_menu(self):
+
+        background_menu = QMenu(self.toolbar)
+        self.background_actions = {}
+
+        for color, icon in colors.create_background_icons().items():
+            action = QAction(icon, f"Background: {color.name}", self)
+            action.triggered.connect(lambda checked=False, c=color: self.draw_area.set_background_color(c))
+            background_menu.addAction(action)
+            self.background_actions[color] = action
+
+        self.background_button = QToolButton()
+        self.background_button.setPopupMode(QToolButton.MenuButtonPopup)
+        self.background_button.setMenu(background_menu)
+
+        self.background_button.setDefaultAction(self.background_actions[colors.Color.BLUE])
+        # We need to connect the triggered signal to change the default action
+        # of the toolbar, otherwise it will stay with the initial default value
+        self.background_button.triggered.connect(self.background_button.setDefaultAction)
+
+        self.toolbar.addWidget(self.background_button)

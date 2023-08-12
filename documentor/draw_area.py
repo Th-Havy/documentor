@@ -71,9 +71,9 @@ class DrawArea(QGraphicsView):
         self.draw_end = self.draw_begin
 
         if self.current_tool == CurrentTool.RECTANGLE:
-            self.shape = self.scene.addRect(QRect(self.draw_begin, self.draw_end), self.pen)
+            self.shape = self.scene.addRect(QRect(self.draw_begin, self.draw_end), self.pen, self.brush)
         if self.current_tool == CurrentTool.ELLIPSE:
-            self.shape = self.scene.addEllipse(QRect(self.draw_begin, self.draw_end), self.pen)
+            self.shape = self.scene.addEllipse(QRect(self.draw_begin, self.draw_end), self.pen, self.brush)
         if self.current_tool == CurrentTool.TEXT:
             self.shape = self.scene.addText("Text")
             self.shape.setPos(self.draw_begin)
