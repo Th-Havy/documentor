@@ -2,7 +2,7 @@ from enum import Enum
 
 from PySide6.QtCore import Qt, QPoint, QRect
 from PySide6.QtWidgets import QGraphicsView, QGraphicsScene
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QFont
 
 from . import colors
 
@@ -33,6 +33,7 @@ class DrawArea(QGraphicsView):
         self.background_color = colors.Color.GREEN
         self.pen = colors.PENS[self.border_color]
         self.brush = colors.BRUSHES[self.background_color]
+        self.font = QFont("Times", 10, QFont.Bold)
 
         self.draw_shapes()
 
@@ -40,7 +41,7 @@ class DrawArea(QGraphicsView):
         ellipse = self.scene.addEllipse(10, 10, 100, 200, self.pen, self.brush)
         pixmap = QPixmap("C:/Users/Thomas/Desktop/plan.png")
         image = self.scene.addPixmap(pixmap)
-        text = self.scene.addText("text")
+        text = self.scene.addSimpleText("text", self.font)
         text.setPos(0, 50)
 
     def mousePressEvent(self, event):
@@ -75,12 +76,16 @@ class DrawArea(QGraphicsView):
         if self.current_tool == CurrentTool.ELLIPSE:
             self.shape = self.scene.addEllipse(QRect(self.draw_begin, self.draw_end), self.pen, self.brush)
         if self.current_tool == CurrentTool.TEXT:
-            self.shape = self.scene.addText("Text")
+            self.shape = self.scene.addSimpleText("Text", self.font)
+            self.shape.setBrush(self.brush)
             self.shape.setPos(self.draw_begin)
 
     def update_draw_shape(self, pos):
-        self.draw_end = pos
-        self.shape.setRect(QRect(self.draw_begin, self.draw_end))
+        if self.current_tool != CurrentTool.TEXT:
+            self.draw_end = pos
+            self.shape.setRect(QRect(self.draw_begin, self.draw_end))
+        else:
+            self.shape.setPos(pos)
 
     def end_draw_shape(self):
         self.draw_begin = QPoint()
