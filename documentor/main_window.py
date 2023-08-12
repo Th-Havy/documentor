@@ -6,17 +6,12 @@ from PySide6.QtWidgets import (QMainWindow, QMenuBar, QToolBar, QGraphicsView,
     QGraphicsScene, QToolButton, QMenu)
 from PySide6.QtGui import QBrush, QPen, QPixmap, QAction, QIcon
 
+from . import colors
+
 
 class MainWindow(QMainWindow):
     """Main windows of the application."""
 
-    class Colors(Enum):
-        BLACK = Qt.GlobalColor.black
-        WHITE = Qt.GlobalColor.white
-        RED = Qt.GlobalColor.red
-        GREEN = Qt.GlobalColor.green
-        BLUE = Qt.GlobalColor.blue
-        YELLOW = Qt.GlobalColor.yellow
 
     def __init__(self):
         super().__init__()
@@ -27,10 +22,7 @@ class MainWindow(QMainWindow):
         self.create_image_menu()
         self.create_edit_menu()
 
-        self.create_color_icons()
         self.create_toolbar()
-
-        self.create_pens_and_brushes()
         self.create_graphic_view()
 
     def create_image_menu(self):
@@ -94,7 +86,7 @@ class MainWindow(QMainWindow):
         border_menu = QMenu(self.toolbar)
         self.border_actions = {}
 
-        for color, icon in self.border_icons.items():
+        for color, icon in colors.create_border_icons().items():
             action = QAction(icon, f"Border: {color.name}", self)
             action.triggered.connect(lambda checked=False, c=color: self.set_border_color(c))
             border_menu.addAction(action)
@@ -104,7 +96,7 @@ class MainWindow(QMainWindow):
         self.border_button.setPopupMode(QToolButton.MenuButtonPopup)
         self.border_button.setMenu(border_menu)
 
-        self.border_button.setDefaultAction(self.border_actions[self.Colors.BLUE])
+        self.border_button.setDefaultAction(self.border_actions[colors.Color.BLUE])
         # We need to connect the triggered signal to change the default action
         # of the toolbar, otherwise it will stay with the initial default value
         self.border_button.triggered.connect(self.border_button.setDefaultAction)
@@ -115,33 +107,6 @@ class MainWindow(QMainWindow):
         print(color)
         self.border_color = color
 
-    def create_pens_and_brushes(self):
-        """Create brushes and pens to draw on images."""
-
-        self.brushes = [QBrush(c.value) for c in self.Colors]
-        self.pens = [QPen(c.value) for c in self.Colors]
-
-    def create_color_icons(self):
-        """Create icons for background and border colors."""
-
-        color_files = [
-            "black.png",
-            "white.png",
-            "red.png",
-            "green.png",
-            "blue.png",
-            "yellow.png",
-        ]
-
-        current_dir = Path(__file__).resolve().parent
-
-        self.border_icons = {}
-        self.background_icons = {}
-
-        for c, file in zip(self.Colors, color_files):
-            self.border_icons[c] = QIcon(str(current_dir / "images" / "border" / file))
-            self.background_icons[c] = QIcon(str(current_dir / "images" / "background" / file))
-
     def create_graphic_view(self):
         """Create graphic view to show and edit objects."""
 
@@ -149,6 +114,6 @@ class MainWindow(QMainWindow):
         self.view = QGraphicsView(self.scene)
         self.setCentralWidget(self.view)
 
-        ellipse = self.scene.addEllipse(10, 10, 100, 200, self.pens[2])
+        ellipse = self.scene.addEllipse(10, 10, 100, 200, colors.pens[colors.Color.GREEN])
         pixmap = QPixmap("C:/Users/Thomas/Desktop/plan.png")
         image = self.scene.addPixmap(pixmap)
