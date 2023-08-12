@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (QMainWindow, QMenuBar, QToolBar, QGraphicsView,
 from PySide6.QtGui import QBrush, QPen, QPixmap, QAction, QIcon
 
 from . import colors
-from .draw_area import DrawArea
+from .draw_area import DrawArea, CurrentTool
 
 
 class MainWindow(QMainWindow):
@@ -24,7 +24,11 @@ class MainWindow(QMainWindow):
         self.create_edit_menu()
 
         self.create_toolbar()
-        self.create_graphic_view()
+
+        # Create graphic view to show and edit objects.
+        self.scene = QGraphicsScene(self)
+        self.draw_area = DrawArea(self.scene)
+        self.setCentralWidget(self.draw_area)
 
     def create_image_menu(self):
         image_menu = self.menuBar().addMenu("image")
@@ -56,19 +60,19 @@ class MainWindow(QMainWindow):
         circle_path = current_dir / "images" / "circle.png"
         ellipse_action = QAction(QIcon(str(circle_path)), "Ellipse", self)
         ellipse_action.setStatusTip("Draw an ellipse")
-        ellipse_action.triggered.connect(lambda : print("ellipse"))
+        ellipse_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.ELLIPSE))
         self.toolbar.addAction(ellipse_action)
 
         square_path = current_dir / "images" / "square.png"
         rectangle_action = QAction(QIcon(str(square_path)), "Rectangle", self)
         rectangle_action.setStatusTip("Draw a rectangle")
-        rectangle_action.triggered.connect(lambda : print("rectangle"))
+        rectangle_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.RECTANGLE))
         self.toolbar.addAction(rectangle_action)
 
         text_path = current_dir / "images" / "text.png"
         text_action = QAction(QIcon(str(text_path)), "Text", self)
         text_action.setStatusTip("Draw some text")
-        text_action.triggered.connect(lambda : print("text"))
+        text_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.TEXT))
         self.toolbar.addAction(text_action)
 
         self.toolbar.addSeparator()
@@ -89,7 +93,7 @@ class MainWindow(QMainWindow):
 
         for color, icon in colors.create_border_icons().items():
             action = QAction(icon, f"Border: {color.name}", self)
-            action.triggered.connect(lambda checked=False, c=color: self.set_border_color(c))
+            action.triggered.connect(lambda checked=False, c=color: self.draw_area.set_border_color(c))
             border_menu.addAction(action)
             self.border_actions[color] = action
 
@@ -103,15 +107,3 @@ class MainWindow(QMainWindow):
         self.border_button.triggered.connect(self.border_button.setDefaultAction)
 
         self.toolbar.addWidget(self.border_button)
-
-    def set_border_color(self, color):
-        print(color)
-        self.border_color = color
-
-    def create_graphic_view(self):
-        """Create graphic view to show and edit objects."""
-
-        self.scene = QGraphicsScene(self)
-        self.view = DrawArea(self.scene)
-        self.setCentralWidget(self.view)
-

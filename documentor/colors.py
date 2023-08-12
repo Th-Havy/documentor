@@ -18,7 +18,7 @@ class Color(Enum):
 
 # Create brushes
 BRUSHES = {c: QBrush(c.value) for c in Color}
-pens = {c: QPen(c.value) for c in Color}
+PENS = {c: QPen(c.value) for c in Color}
 
 # Create icons for background and border colors.
 _color_files = [
