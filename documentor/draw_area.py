@@ -36,6 +36,9 @@ class DrawArea(QGraphicsView):
         self.brush = colors.BRUSHES[self.background_color]
         self.font = QFont("Times", 10, QFont.Bold)
 
+        # Allow drag&drop of image
+        self.setAcceptDrops(True)
+
     def mousePressEvent(self, event):
         if event.buttons() & Qt.MouseButton.LeftButton:
             self.begin_draw_shape(event.pos())
@@ -47,6 +50,19 @@ class DrawArea(QGraphicsView):
     def mouseReleaseEvent(self, event):
         if event.button() & Qt.MouseButton.LeftButton:
             self.end_draw_shape()
+
+    def dragEnterEvent(self, event):
+        """Must be overriden so that dropEvent() gets called."""
+        if (event.mimeData().hasImage()):
+            event.acceptProposedAction()
+
+    def dragMoveEvent(self, event):
+        """Must be overriden so that dropEvent() gets called."""
+        pass
+
+    def dropEvent(self, event):
+        if (event.mimeData().hasImage()):
+            self.draw_image(QPixmap(event.mimeData().imageData()))
 
     def set_current_tool(self, tool:CurrentTool):
         self.current_tool = tool
