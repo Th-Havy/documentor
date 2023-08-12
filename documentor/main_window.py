@@ -3,7 +3,7 @@ from enum import Enum
 
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtWidgets import (QMainWindow, QMenuBar, QToolBar, QGraphicsView,
-    QGraphicsScene, QToolButton, QMenu)
+    QGraphicsScene, QToolButton, QMenu, QFileDialog)
 from PySide6.QtGui import QBrush, QPen, QPixmap, QAction, QIcon
 
 from . import colors
@@ -34,7 +34,8 @@ class MainWindow(QMainWindow):
         image_menu = self.menuBar().addMenu("image")
 
         self.import_action = image_menu.addAction("import")
-        self.import_action.triggered.connect(lambda : print("imported"))
+        # self.import_action.triggered.connect(lambda : self.draw_area.draw_image(QPixmap("C:/Users/Thomas/Desktop/plan.png")))
+        self.import_action.triggered.connect(self.import_image)
 
         self.paste_action = image_menu.addAction("paste")
         self.paste_action.triggered.connect(lambda : print("pasted"))
@@ -124,3 +125,7 @@ class MainWindow(QMainWindow):
         self.background_button.triggered.connect(self.background_button.setDefaultAction)
 
         self.toolbar.addWidget(self.background_button)
+
+    def import_image(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.bmp)")
+        self.draw_area.draw_image(QPixmap(file_name))

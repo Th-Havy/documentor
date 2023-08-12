@@ -27,6 +27,7 @@ class DrawArea(QGraphicsView):
         self.draw_begin = QPoint()
         self.draw_end = QPoint()
         self.shape = None
+        self.image = None
 
         # Default pens and brushes
         self.border_color = colors.Color.GREEN
@@ -34,15 +35,6 @@ class DrawArea(QGraphicsView):
         self.pen = colors.PENS[self.border_color]
         self.brush = colors.BRUSHES[self.background_color]
         self.font = QFont("Times", 10, QFont.Bold)
-
-        self.draw_shapes()
-
-    def draw_shapes(self):
-        ellipse = self.scene.addEllipse(10, 10, 100, 200, self.pen, self.brush)
-        pixmap = QPixmap("C:/Users/Thomas/Desktop/plan.png")
-        image = self.scene.addPixmap(pixmap)
-        text = self.scene.addSimpleText("text", self.font)
-        text.setPos(0, 50)
 
     def mousePressEvent(self, event):
         if event.buttons() & Qt.MouseButton.LeftButton:
@@ -91,3 +83,6 @@ class DrawArea(QGraphicsView):
         self.draw_begin = QPoint()
         self.draw_end = QPoint()
         self.shape = None
+
+    def draw_image(self, pixmap:QPixmap):
+        self.image = self.scene.addPixmap(pixmap)
