@@ -2,9 +2,9 @@ from pathlib import Path
 from enum import Enum
 
 from PySide6.QtCore import Qt, QSize
-from PySide6.QtWidgets import (QMainWindow, QMenuBar, QToolBar, QGraphicsView,
-    QGraphicsScene, QToolButton, QMenu, QFileDialog)
-from PySide6.QtGui import QBrush, QPen, QPixmap, QAction, QIcon
+from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QToolBar,
+    QGraphicsView, QGraphicsScene, QToolButton, QMenu, QFileDialog)
+from PySide6.QtGui import QBrush, QPen, QPixmap, QAction, QIcon, QClipboard
 
 from . import colors
 from .draw_area import DrawArea, CurrentTool
@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self.import_action.triggered.connect(self.import_image)
 
         self.paste_action = image_menu.addAction("paste")
-        self.paste_action.triggered.connect(lambda : print("pasted"))
+        self.paste_action.triggered.connect(self.paste_image)
 
         self.save_action = image_menu.addAction("save")
         self.save_action.triggered.connect(lambda : print("saved"))
@@ -129,3 +129,10 @@ class MainWindow(QMainWindow):
     def import_image(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.bmp)")
         self.draw_area.draw_image(QPixmap(file_name))
+
+    def paste_image(self):
+        clipboard = QApplication.clipboard()
+        mimeData = clipboard.mimeData()
+
+        if (mimeData.hasImage()):
+            self.draw_area.draw_image(QPixmap(mimeData.imageData()))
