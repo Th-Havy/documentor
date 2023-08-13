@@ -4,7 +4,7 @@ from enum import Enum
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QToolBar,
     QGraphicsView, QGraphicsScene, QToolButton, QMenu, QFileDialog)
-from PySide6.QtGui import QBrush, QPen, QPixmap, QAction, QIcon, QClipboard
+from PySide6.QtGui import QPixmap, QAction, QIcon, QClipboard, QKeySequence
 
 from . import colors
 from .draw_area import DrawArea, CurrentTool
@@ -31,17 +31,22 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.draw_area)
 
     def create_image_menu(self):
-        image_menu = self.menuBar().addMenu("image")
+        image_menu = self.menuBar().addMenu("Image")
 
-        self.import_action = image_menu.addAction("import")
-        # self.import_action.triggered.connect(lambda : self.draw_area.draw_image(QPixmap("C:/Users/Thomas/Desktop/plan.png")))
+        self.import_action = image_menu.addAction("Import")
         self.import_action.triggered.connect(self.import_image)
 
-        self.paste_action = image_menu.addAction("paste")
+        self.paste_action = image_menu.addAction("Paste")
         self.paste_action.triggered.connect(self.paste_image)
+        self.paste_action.setShortcut(QKeySequence("Ctrl+V"))
 
-        self.save_action = image_menu.addAction("save")
+        self.save_action = image_menu.addAction("Save")
         self.save_action.triggered.connect(lambda : print("saved"))
+        self.save_action.setShortcut(QKeySequence("Ctrl+S"))
+
+        self.save_as_action = image_menu.addAction("Save as")
+        self.save_as_action.triggered.connect(lambda : print("saved as"))
+        self.save_as_action.setShortcut(QKeySequence("Ctrl+Shift+S"))
 
     def create_edit_menu(self):
         edit_menu = self.menuBar().addMenu("edit")
