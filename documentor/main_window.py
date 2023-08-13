@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.paste_action.setShortcut(QKeySequence("Ctrl+V"))
 
         self.save_action = image_menu.addAction("Save")
-        self.save_action.triggered.connect(lambda : print("saved"))
+        self.save_action.triggered.connect(self.save_image)
         self.save_action.setShortcut(QKeySequence("Ctrl+S"))
 
         self.save_as_action = image_menu.addAction("Save as")
@@ -141,3 +141,10 @@ class MainWindow(QMainWindow):
 
         if (mimeData.hasImage()):
             self.draw_area.draw_image(QPixmap(mimeData.imageData()))
+
+    def save_image(self) -> QPixmap:
+        filepath, _ = QFileDialog.getSaveFileName(self, "Save image", "", "Image Files (*.png *.jpg *.bmp)")
+
+        if filepath:
+            pixmap = self.draw_area.grab()
+            pixmap.save(filepath)
