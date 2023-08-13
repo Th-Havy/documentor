@@ -18,6 +18,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Documentor")
+        self.set_window_icon()
 
         # Create menu bar
         self.create_image_menu()
@@ -29,6 +30,11 @@ class MainWindow(QMainWindow):
         self.scene = QGraphicsScene(self)
         self.draw_area = DrawArea(self.scene)
         self.setCentralWidget(self.draw_area)
+
+    def set_window_icon(self):
+        current_dir = Path(__file__).resolve().parent
+        app_icon = QIcon(str(current_dir / "images" / "icon.png"))
+        self.setWindowIcon(app_icon)
 
     def create_image_menu(self):
         image_menu = self.menuBar().addMenu("Image")
