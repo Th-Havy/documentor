@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Documentor")
         self.set_window_icon()
+        self.resize(640, 480)
 
         # Create menu bar
         self.create_image_menu()

@@ -121,3 +121,5 @@ class DrawArea(QGraphicsView):
 
     def draw_image(self, pixmap:QPixmap):
         self.image = self.scene.addPixmap(pixmap)
+        # Always place the image in the background
+        self.image.setZValue(-1)
