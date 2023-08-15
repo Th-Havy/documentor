@@ -1,7 +1,7 @@
 from pathlib import Path
 from enum import Enum
 
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt, QSize, QRect
 from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QToolBar,
     QGraphicsView, QGraphicsScene, QToolButton, QMenu, QFileDialog)
 from PySide6.QtGui import (QPixmap, QAction, QIcon, QClipboard, QKeySequence,
@@ -171,5 +171,10 @@ class MainWindow(QMainWindow):
         filepath, _ = QFileDialog.getSaveFileName(self, "Save image", "", "Image Files (*.png *.jpg *.bmp)")
 
         if filepath:
-            pixmap = self.draw_area.grab()
+            pixmap = self.draw_area.grab(QRect(
+                self.scene.sceneRect().x(),
+                self.scene.sceneRect().y(),
+                self.scene.sceneRect().width(),
+                self.scene.sceneRect().height(),
+            ))
             pixmap.save(filepath)
