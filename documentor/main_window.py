@@ -69,6 +69,12 @@ class MainWindow(QMainWindow):
 
         current_dir = Path(__file__).resolve().parent
 
+        cursor_path = current_dir / "images" / "cursor.png"
+        cursor_action = QAction(QIcon(str(cursor_path)), "Cursor", self)
+        cursor_action.setStatusTip("Select elements")
+        cursor_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.ELLIPSE))
+        self.toolbar.addAction(cursor_action)
+
         circle_path = current_dir / "images" / "circle.png"
         ellipse_action = QAction(QIcon(str(circle_path)), "Ellipse", self)
         ellipse_action.setStatusTip("Draw an ellipse")

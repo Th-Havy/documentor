@@ -8,9 +8,10 @@ from . import colors
 
 
 class CurrentTool(Enum):
-    RECTANGLE = 0
-    ELLIPSE = 1
-    TEXT = 2
+    CURSOR = 0
+    RECTANGLE = 1
+    ELLIPSE = 2
+    TEXT = 3
 
 
 class DrawArea(QGraphicsView):
@@ -23,7 +24,7 @@ class DrawArea(QGraphicsView):
         self.view = QGraphicsView(self.scene)
 
         # To keep track of shape drawing
-        self.current_tool = CurrentTool.RECTANGLE
+        self.current_tool = CurrentTool.CURSOR
         self.draw_begin = QPoint()
         self.draw_end = QPoint()
         self.shape = None
@@ -40,14 +41,26 @@ class DrawArea(QGraphicsView):
         self.setAcceptDrops(True)
 
     def mousePressEvent(self, event):
+
+        if self.current_tool == CurrentTool.CURSOR:
+            return
+
         if event.buttons() & Qt.MouseButton.LeftButton:
             self.begin_draw_shape(event.pos())
 
     def mouseMoveEvent(self, event):
+
+        if self.current_tool == CurrentTool.CURSOR:
+            return
+
         if event.buttons() & Qt.MouseButton.LeftButton:
             self.update_draw_shape(event.pos())
 
     def mouseReleaseEvent(self, event):
+
+        if self.current_tool == CurrentTool.CURSOR:
+            return
+
         if event.button() & Qt.MouseButton.LeftButton:
             self.end_draw_shape()
 
