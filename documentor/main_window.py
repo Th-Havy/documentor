@@ -137,6 +137,12 @@ class MainWindow(QMainWindow):
 
         self.toolbar.addWidget(self.background_button)
 
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+
+        self.draw_area.setSceneRect(0, 0, event.size().width(), event.size().height())
+
+
     def import_image(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.bmp)")
         self.draw_area.draw_image(QPixmap(file_name))
