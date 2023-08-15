@@ -72,7 +72,7 @@ class MainWindow(QMainWindow):
         cursor_path = current_dir / "images" / "cursor.png"
         cursor_action = QAction(QIcon(str(cursor_path)), "Cursor", self)
         cursor_action.setStatusTip("Select elements")
-        cursor_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.ELLIPSE))
+        cursor_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.CURSOR))
         self.toolbar.addAction(cursor_action)
 
         circle_path = current_dir / "images" / "circle.png"

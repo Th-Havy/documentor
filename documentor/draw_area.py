@@ -1,7 +1,7 @@
 from enum import Enum
 
 from PySide6.QtCore import Qt, QPoint, QRect
-from PySide6.QtWidgets import QGraphicsView, QGraphicsScene
+from PySide6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsItem
 from PySide6.QtGui import QPixmap, QFont
 
 from . import colors
@@ -43,6 +43,7 @@ class DrawArea(QGraphicsView):
     def mousePressEvent(self, event):
 
         if self.current_tool == CurrentTool.CURSOR:
+            super().mousePressEvent(event)
             return
 
         if event.buttons() & Qt.MouseButton.LeftButton:
@@ -51,6 +52,7 @@ class DrawArea(QGraphicsView):
     def mouseMoveEvent(self, event):
 
         if self.current_tool == CurrentTool.CURSOR:
+            super().mouseMoveEvent(event)
             return
 
         if event.buttons() & Qt.MouseButton.LeftButton:
@@ -59,6 +61,7 @@ class DrawArea(QGraphicsView):
     def mouseReleaseEvent(self, event):
 
         if self.current_tool == CurrentTool.CURSOR:
+            super().mouseReleaseEvent(event)
             return
 
         if event.button() & Qt.MouseButton.LeftButton:
@@ -111,6 +114,9 @@ class DrawArea(QGraphicsView):
     def end_draw_shape(self):
         self.draw_begin = QPoint()
         self.draw_end = QPoint()
+
+        self.shape.setFlag(QGraphicsItem.ItemIsSelectable, True)
+        self.shape.setFlag(QGraphicsItem.ItemIsMovable, True)
         self.shape = None
 
     def draw_image(self, pixmap:QPixmap):
