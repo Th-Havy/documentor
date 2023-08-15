@@ -4,7 +4,8 @@ from enum import Enum
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QToolBar,
     QGraphicsView, QGraphicsScene, QToolButton, QMenu, QFileDialog)
-from PySide6.QtGui import QPixmap, QAction, QIcon, QClipboard, QKeySequence
+from PySide6.QtGui import (QPixmap, QAction, QIcon, QClipboard, QKeySequence,
+    QActionGroup)
 
 from . import colors
 from .draw_area import DrawArea, CurrentTool
@@ -67,32 +68,37 @@ class MainWindow(QMainWindow):
         self.toolbar = QToolBar("toolbar")
         self.toolbar.setIconSize(QSize(32, 32))
         self.addToolBar(self.toolbar)
+        tool_group = QActionGroup(self)
 
         current_dir = Path(__file__).resolve().parent
 
         cursor_path = current_dir / "images" / "cursor.png"
-        cursor_action = QAction(QIcon(str(cursor_path)), "Cursor", self)
+        cursor_action = QAction(QIcon(str(cursor_path)), "Cursor", self, checkable=True)
         cursor_action.setStatusTip("Select elements")
         cursor_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.CURSOR))
         self.toolbar.addAction(cursor_action)
+        tool_group.addAction(cursor_action)
 
         circle_path = current_dir / "images" / "circle.png"
-        ellipse_action = QAction(QIcon(str(circle_path)), "Ellipse", self)
+        ellipse_action = QAction(QIcon(str(circle_path)), "Ellipse", self, checkable=True)
         ellipse_action.setStatusTip("Draw an ellipse")
         ellipse_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.ELLIPSE))
         self.toolbar.addAction(ellipse_action)
+        tool_group.addAction(ellipse_action)
 
         square_path = current_dir / "images" / "square.png"
-        rectangle_action = QAction(QIcon(str(square_path)), "Rectangle", self)
+        rectangle_action = QAction(QIcon(str(square_path)), "Rectangle", self, checkable=True)
         rectangle_action.setStatusTip("Draw a rectangle")
         rectangle_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.RECTANGLE))
         self.toolbar.addAction(rectangle_action)
+        tool_group.addAction(rectangle_action)
 
         text_path = current_dir / "images" / "text.png"
-        text_action = QAction(QIcon(str(text_path)), "Text", self)
+        text_action = QAction(QIcon(str(text_path)), "Text", self, checkable=True)
         text_action.setStatusTip("Draw some text")
         text_action.triggered.connect(lambda : self.draw_area.set_current_tool(CurrentTool.TEXT))
         self.toolbar.addAction(text_action)
+        tool_group.addAction(text_action)
 
         self.toolbar.addSeparator()
 
