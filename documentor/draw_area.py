@@ -1,10 +1,12 @@
 from enum import Enum
 
 from PySide6.QtCore import Qt, QPoint, QRect
-from PySide6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsItem
-from PySide6.QtGui import QPixmap, QFont
+from PySide6.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsItem,
+    QGraphicsRectItem, QGraphicsEllipseItem, QGraphicsTextItem)
+from PySide6.QtGui import QPixmap, QFont, QUndoStack
 
 from . import colors
+from .commands import AddCommand
 
 
 class CurrentTool(Enum):
@@ -17,11 +19,12 @@ class CurrentTool(Enum):
 class DrawArea(QGraphicsView):
     """Main view to display and draw items."""
 
-    def __init__(self, scene:QGraphicsScene):
+    def __init__(self, scene:QGraphicsScene, undo_stack:QUndoStack):
         super().__init__(scene)
 
         self.scene = scene
         self.view = QGraphicsView(self.scene)
+        self.undo_stack = undo_stack
 
         # To keep track of shape drawing
         self.current_tool = CurrentTool.CURSOR
@@ -96,13 +99,18 @@ class DrawArea(QGraphicsView):
         self.draw_end = self.draw_begin
 
         if self.current_tool == CurrentTool.RECTANGLE:
-            self.shape = self.scene.addRect(QRect(self.draw_begin, self.draw_end), self.pen, self.brush)
+            self.shape = QGraphicsRectItem(QRect(self.draw_begin, self.draw_end))
+            add_command = AddCommand(self.shape, self.scene, self.pen, self.brush)
+            self.undo_stack.push(add_command)
         if self.current_tool == CurrentTool.ELLIPSE:
-            self.shape = self.scene.addEllipse(QRect(self.draw_begin, self.draw_end), self.pen, self.brush)
+            self.shape = QGraphicsEllipseItem(QRect(self.draw_begin, self.draw_end))
+            add_command = AddCommand(self.shape, self.scene, self.pen, self.brush)
+            self.undo_stack.push(add_command)
         if self.current_tool == CurrentTool.TEXT:
-            self.shape = self.scene.addSimpleText("Text", self.font)
-            self.shape.setBrush(self.brush)
+            self.shape = QGraphicsTextItem("Text")
             self.shape.setPos(self.draw_begin)
+            add_command = AddCommand(self.shape, self.scene, brush=self.brush, font=self.font)
+            self.undo_stack.push(add_command)
 
     def update_draw_shape(self, pos):
         if self.current_tool != CurrentTool.TEXT:

@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt, QSize, QRect
 from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QToolBar,
     QGraphicsView, QGraphicsScene, QToolButton, QMenu, QFileDialog)
 from PySide6.QtGui import (QPixmap, QAction, QIcon, QClipboard, QKeySequence,
-    QActionGroup)
+    QActionGroup, QUndoStack)
 
 from . import colors
 from .draw_area import DrawArea, CurrentTool
@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
 
         # Create graphic view to show and edit objects.
         self.scene = QGraphicsScene(self)
-        self.draw_area = DrawArea(self.scene)
+        self.draw_area = DrawArea(self.scene, self.undo_stack)
         self.setCentralWidget(self.draw_area)
 
     def set_window_icon(self):
@@ -57,12 +57,21 @@ class MainWindow(QMainWindow):
         self.save_as_action.setShortcut(QKeySequence("Ctrl+Shift+S"))
 
     def create_edit_menu(self):
+
+        # Create undo-redo
+        self.undo_stack = QUndoStack(self)
+
         edit_menu = self.menuBar().addMenu("edit")
 
-        self.undo_action = edit_menu.addAction("undo")
+        self.undo_action = self.undo_stack.createUndoAction(self, "Undo")
+        edit_menu.addAction(self.undo_action)
         self.undo_action.triggered.connect(lambda : print("undone"))
-        self.redo_action = edit_menu.addAction("redo")
+        self.undo_action.setShortcut(QKeySequence("Ctrl+Z"))
+
+        self.redo_action = self.undo_stack.createRedoAction(self, "Redo")
+        edit_menu.addAction(self.redo_action)
         self.redo_action.triggered.connect(lambda : print("redone"))
+        self.redo_action.setShortcut(QKeySequence("Ctrl+Y"))
 
     def create_toolbar(self):
         self.toolbar = QToolBar("toolbar")
