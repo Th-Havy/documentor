@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsItem,
 from PySide6.QtGui import QPixmap, QFont, QUndoStack
 
 from . import colors
-from .commands import AddCommand
+from .commands import AddCommand, DeleteCommand
 
 
 class CurrentTool(Enum):
@@ -135,9 +135,9 @@ class DrawArea(QGraphicsView):
     def keyPressEvent(self, event):
         """Delete selected items when pressing Del key."""
         if self.current_tool == CurrentTool.CURSOR:
-            if event.key() & Qt.Key.Key_Delete:
+            if event.key() == Qt.Key.Key_Delete:
                 self.delete_selected_items()
 
     def delete_selected_items(self):
-        for item in self.scene.selectedItems():
-            self.scene.removeItem(item)
+        delete_command = DeleteCommand(self.scene.selectedItems(), self.scene)
+        self.undo_stack.push(delete_command)

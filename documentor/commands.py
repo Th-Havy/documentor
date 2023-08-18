@@ -37,21 +37,23 @@ class AddCommand(QUndoCommand):
 
 class DeleteCommand(QUndoCommand):
 
-    def __init__(self, item:QGraphicsItem, scene: QGraphicsScene, parent:QUndoCommand=None):
+    def __init__(self, items:list[QGraphicsItem], scene: QGraphicsScene, parent:QUndoCommand=None):
         super().__init__(parent)
 
-        self.item = item
+        self.items = items
         self.scene = scene
 
     def undo(self):
-        self.scene.addItem(self.item)
-        self.setText("Undeleted item")
+        for item in self.items:
+            self.scene.addItem(item)
+        self.setText("Undeleted items")
         self.scene.update()
 
     def redo(self):
-        self.scene.removeItem(self.item)
+        for item in self.items:
+            self.scene.removeItem(item)
+        self.setText("Redeleted items")
         self.scene.update()
-        self.setText("Redeleted item")
 
 
 class MoveCommand(QUndoCommand):
