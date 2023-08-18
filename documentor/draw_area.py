@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsItem,
 from PySide6.QtGui import QPixmap, QFont, QUndoStack
 
 from . import colors
-from .commands import AddCommand, DeleteCommand
+from .commands import AddCommand, DeleteCommand, MoveCommand
 
 
 class CurrentTool(Enum):
@@ -25,6 +25,7 @@ class DrawArea(QGraphicsView):
         self.scene = scene
         self.view = QGraphicsView(self.scene)
         self.undo_stack = undo_stack
+        self.move_old_positions = []
 
         # To keep track of shape drawing
         self.current_tool = CurrentTool.CURSOR
@@ -47,6 +48,9 @@ class DrawArea(QGraphicsView):
 
         if self.current_tool == CurrentTool.CURSOR:
             super().mousePressEvent(event)
+
+            if self.scene.selectedItems():
+                self.begin_move_items(self.scene.selectedItems())
             return
 
         if event.buttons() & Qt.MouseButton.LeftButton:
@@ -65,6 +69,9 @@ class DrawArea(QGraphicsView):
 
         if self.current_tool == CurrentTool.CURSOR:
             super().mouseReleaseEvent(event)
+
+            if self.scene.selectedItems():
+                self.end_move_items(self.scene.selectedItems())
             return
 
         if event.button() & Qt.MouseButton.LeftButton:
@@ -141,3 +148,10 @@ class DrawArea(QGraphicsView):
     def delete_selected_items(self):
         delete_command = DeleteCommand(self.scene.selectedItems(), self.scene)
         self.undo_stack.push(delete_command)
+
+    def begin_move_items(self, selected_items):
+        self.move_old_positions = [item.pos() for item in selected_items]
+
+    def end_move_items(self, selected_items):
+        move_command = MoveCommand(selected_items, self.scene, self.move_old_positions)
+        self.undo_stack.push(move_command)

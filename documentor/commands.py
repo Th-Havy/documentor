@@ -58,24 +58,25 @@ class DeleteCommand(QUndoCommand):
 
 class MoveCommand(QUndoCommand):
 
-    def __init__(self, item:QGraphicsItem, old_position:QPointF, parent:QUndoCommand=None):
+    def __init__(self, items:list[QGraphicsItem], scene: QGraphicsScene, old_positions:list[QPointF], parent:QUndoCommand=None):
         super().__init__(parent)
 
-        self.item = item
-        self.old_position = old_position
-        self.new_position = item.pos()
+        self.scene = scene
+        self.items = items
+        self.old_positions = old_positions
+        self.new_positions = [item.pos() for item in self.items]
 
     def undo(self):
-        self.item.setPos(self.old_position)
-        self.item.scene().update()
+        for item, pos in zip(self.items, self.old_positions):
+            item.setPos(pos)
+        self.scene.update()
         self.setText("Undone move")
 
     def redo(self):
-        self.item.setPos(self.new_position)
+        for item, pos in zip(self.items, self.new_positions):
+            item.setPos(pos)
+        self.scene.update()
         self.setText("Redone move")
 
-    def mergeWith(self, command: QUndoCommand) -> bool:
-        pass
-
-    def id(self) -> int:
-        return 1234
+    # def mergeWith(self, command: QUndoCommand) -> bool:
+    #     pass
