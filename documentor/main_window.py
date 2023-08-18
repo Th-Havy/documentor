@@ -65,12 +65,10 @@ class MainWindow(QMainWindow):
 
         self.undo_action = self.undo_stack.createUndoAction(self, "Undo")
         edit_menu.addAction(self.undo_action)
-        self.undo_action.triggered.connect(lambda : print("undone"))
         self.undo_action.setShortcut(QKeySequence("Ctrl+Z"))
 
         self.redo_action = self.undo_stack.createRedoAction(self, "Redo")
         edit_menu.addAction(self.redo_action)
-        self.redo_action.triggered.connect(lambda : print("redone"))
         self.redo_action.setShortcut(QKeySequence("Ctrl+Y"))
 
     def create_toolbar(self):

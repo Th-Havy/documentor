@@ -131,3 +131,13 @@ class DrawArea(QGraphicsView):
         self.image = self.scene.addPixmap(pixmap)
         # Always place the image in the background
         self.image.setZValue(-1)
+
+    def keyPressEvent(self, event):
+        """Delete selected items when pressing Del key."""
+        if self.current_tool == CurrentTool.CURSOR:
+            if event.key() & Qt.Key.Key_Delete:
+                self.delete_selected_items()
+
+    def delete_selected_items(self):
+        for item in self.scene.selectedItems():
+            self.scene.removeItem(item)
