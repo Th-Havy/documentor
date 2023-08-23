@@ -7,6 +7,7 @@ from PySide6.QtGui import QPixmap, QFont, QUndoStack
 
 from . import colors
 from .commands import AddCommand, DeleteCommand, MoveCommand
+from .editable_text_item import EditableTextItem
 
 
 class CurrentTool(Enum):
@@ -114,7 +115,7 @@ class DrawArea(QGraphicsView):
             add_command = AddCommand(self.shape, self.scene, self.pen, self.brush)
             self.undo_stack.push(add_command)
         if self.current_tool == CurrentTool.TEXT:
-            self.shape = QGraphicsTextItem("Text")
+            self.shape = EditableTextItem("Text")
             self.shape.setPos(self.draw_begin)
             add_command = AddCommand(self.shape, self.scene, brush=self.brush, font=self.font)
             self.undo_stack.push(add_command)
@@ -132,6 +133,8 @@ class DrawArea(QGraphicsView):
 
         self.shape.setFlag(QGraphicsItem.ItemIsSelectable, True)
         self.shape.setFlag(QGraphicsItem.ItemIsMovable, True)
+        self.shape.setFlag(QGraphicsItem.ItemIsFocusable, True)
+
         self.shape = None
 
     def draw_image(self, pixmap:QPixmap):
@@ -141,6 +144,10 @@ class DrawArea(QGraphicsView):
 
     def keyPressEvent(self, event):
         """Delete selected items when pressing Del key."""
+
+        # Necessary to edit text
+        super().keyPressEvent(event)
+
         if self.current_tool == CurrentTool.CURSOR:
             if event.key() == Qt.Key.Key_Delete:
                 self.delete_selected_items()
