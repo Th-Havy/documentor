@@ -5,6 +5,8 @@ from PySide6.QtCore import QPointF
 from PySide6.QtGui import QUndoCommand, QBrush, QPen, QFont
 from PySide6.QtWidgets import QGraphicsItem, QGraphicsScene
 
+from .editable_text_item import EditableTextItem
+
 
 class AddCommand(QUndoCommand):
 
@@ -77,6 +79,3 @@ class MoveCommand(QUndoCommand):
             item.setPos(pos)
         self.scene.update()
         self.setText("Redone move")
-
-    # def mergeWith(self, command: QUndoCommand) -> bool:
-    #     pass

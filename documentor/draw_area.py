@@ -115,7 +115,7 @@ class DrawArea(QGraphicsView):
             add_command = AddCommand(self.shape, self.scene, self.pen, self.brush)
             self.undo_stack.push(add_command)
         if self.current_tool == CurrentTool.TEXT:
-            self.shape = EditableTextItem("Text")
+            self.shape = EditableTextItem("Text", self.undo_stack)
             self.shape.setPos(self.draw_begin)
             add_command = AddCommand(self.shape, self.scene, brush=self.brush, font=self.font)
             self.undo_stack.push(add_command)
