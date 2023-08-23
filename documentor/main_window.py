@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         self.border_button.setPopupMode(QToolButton.MenuButtonPopup)
         self.border_button.setMenu(border_menu)
 
-        self.border_button.setDefaultAction(self.border_actions[colors.Color.BLUE])
+        self.border_button.setDefaultAction(self.border_actions[colors.Color.RED])
         # We need to connect the triggered signal to change the default action
         # of the toolbar, otherwise it will stay with the initial default value
         self.border_button.triggered.connect(self.border_button.setDefaultAction)
@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
         self.background_button.setPopupMode(QToolButton.MenuButtonPopup)
         self.background_button.setMenu(background_menu)
 
-        self.background_button.setDefaultAction(self.background_actions[colors.Color.BLUE])
+        self.background_button.setDefaultAction(self.background_actions[colors.Color.TRANSPARENT])
         # We need to connect the triggered signal to change the default action
         # of the toolbar, otherwise it will stay with the initial default value
         self.background_button.triggered.connect(self.background_button.setDefaultAction)

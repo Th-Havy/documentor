@@ -36,8 +36,8 @@ class DrawArea(QGraphicsView):
         self.image = None
 
         # Default pens and brushes
-        self.border_color = colors.Color.GREEN
-        self.background_color = colors.Color.GREEN
+        self.border_color = colors.Color.RED
+        self.background_color = colors.Color.TRANSPARENT
         self.pen = colors.PENS[self.border_color]
         self.brush = colors.BRUSHES[self.background_color]
         self.font = QFont("Times", 10, QFont.Bold)
