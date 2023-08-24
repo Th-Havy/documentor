@@ -40,7 +40,7 @@ class DrawArea(QGraphicsView):
         self.background_color = colors.Color.TRANSPARENT
         self.pen = colors.PENS[self.border_color]
         self.brush = colors.BRUSHES[self.background_color]
-        self.font = QFont("Times", 10, QFont.Bold)
+        self.font = QFont("Times", 20, QFont.Bold)
 
         # Allow drag&drop of image
         self.setAcceptDrops(True)
@@ -101,6 +101,10 @@ class DrawArea(QGraphicsView):
     def set_border_size(self, size):
         print(size)
         self.pen.setWidth(size)
+
+    def set_font_size(self, size):
+        print(size)
+        self.font.setPointSize(size)
 
     def set_background_color(self, background_color):
         self.background_color = background_color

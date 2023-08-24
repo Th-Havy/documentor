@@ -107,15 +107,21 @@ class MainWindow(QMainWindow):
         self.toolbar.addAction(text_action)
         tool_group.addAction(text_action)
 
+        font_size_spin_box = QSpinBox(self)
+        font_size_spin_box.setRange(10, 100)
+        font_size_spin_box.valueChanged.connect(lambda v: self.draw_area.set_font_size(v))
+        self.toolbar.addWidget(font_size_spin_box)
+
         self.toolbar.addSeparator()
 
         self.create_border_menu()
-        self.create_background_menu()
 
         border_size_spin_box = QSpinBox(self)
         border_size_spin_box.setRange(1, 20)
         border_size_spin_box.valueChanged.connect(lambda v: self.draw_area.set_border_size(v))
         self.toolbar.addWidget(border_size_spin_box)
+
+        self.create_background_menu()
 
     def create_border_menu(self):
 
