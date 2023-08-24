@@ -3,7 +3,7 @@ from enum import Enum
 
 from PySide6.QtCore import Qt, QSize, QRect
 from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QToolBar,
-    QGraphicsView, QGraphicsScene, QToolButton, QMenu, QFileDialog)
+    QGraphicsView, QGraphicsScene, QToolButton, QMenu, QFileDialog, QSpinBox)
 from PySide6.QtGui import (QPixmap, QAction, QIcon, QClipboard, QKeySequence,
     QActionGroup, QUndoStack)
 
@@ -112,6 +112,10 @@ class MainWindow(QMainWindow):
         self.create_border_menu()
         self.create_background_menu()
 
+        border_size_spin_box = QSpinBox(self)
+        border_size_spin_box.setRange(1, 20)
+        border_size_spin_box.valueChanged.connect(lambda v: self.draw_area.set_border_size(v))
+        self.toolbar.addWidget(border_size_spin_box)
 
     def create_border_menu(self):
 

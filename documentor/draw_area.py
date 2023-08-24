@@ -98,6 +98,10 @@ class DrawArea(QGraphicsView):
         self.border_color = border_color
         self.pen = colors.PENS[self.border_color]
 
+    def set_border_size(self, size):
+        print(size)
+        self.pen.setWidth(size)
+
     def set_background_color(self, background_color):
         self.background_color = background_color
         self.brush = colors.BRUSHES[self.background_color]
