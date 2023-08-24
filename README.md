@@ -2,6 +2,15 @@
 
 Basic graphical app aiming at adding documentation to screenshots.
 
+![app image](readme_image.png)
+
+## Features
+
+* Import/copy paste/drag and drop image.
+* Draw rectangles and ellipses.
+* Add text.
+* Support for undo-redo.
+
 ## Installation
 
 Clone the repository:
