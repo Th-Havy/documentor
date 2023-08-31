@@ -27,6 +27,12 @@ conda activate documentor
 pip install -r requirements.txt
 ```
 
+## Running the program
+
+```
+python main.py
+```
+
 ## Author
 
 * **Thomas Havy**
